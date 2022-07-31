@@ -1,0 +1,26 @@
+body { 
+  background-color : rgba(0, 0, 0, 0.95);
+  color            : black;
+}
+
+/* Create the gameboard */
+.gameBoard {
+  display         : grid;
+  border          : 2px solid red;
+  grid-template   : repeat(3,6rem) / repeat(3,6rem);
+  justify-content : center;
+}
+
+.gameBoard div{
+  height     : 6rem;
+  width      : 6rem;
+  background : beige;
+  border     : 1px solid grey ;
+}
+
+.gameBoard div p {
+  margin: 0;
+  padding: 0;
+  height: 6rem;
+  width: 6rem;
+}
