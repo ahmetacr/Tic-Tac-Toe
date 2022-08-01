@@ -87,7 +87,10 @@ const Gameboard = (function() {
     event.target.removeEventListener('click', _updateGameBoard)
 
     // Try gameover // Continue from here
-    let isGameOver = displayController.gameOver;
+    let isGameOver = displayController.gameOver();
+    if (isGameOver) {
+      signBox.forEach(box => box.removeEventListener('click',_updateGameBoard))
+    }
     console.log(isGameOver); 
   };
 
@@ -102,26 +105,28 @@ const Gameboard = (function() {
 const displayController = (function() {
   const gameOver = () => {
     const gameBoard = Gameboard.gameBoard;
+    console.log(gameBoard);
+    console.log(gameBoard[0])
     let gameOver = false;
-    if (gameBoard[0] == gameBoard[1] == gameBoard[2]) {
+    if (gameBoard[0] == gameBoard[1] && gameBoard[1] == gameBoard[2] && gameBoard[2] !== null) {
       gameOver = true;
-    } else if (gameBoard[3] == gameBoard[4] == gameBoard[5]) {
+    } else if (gameBoard[3] == gameBoard[4] && gameBoard[4] == gameBoard[5] && gameBoard[5] !== null) {
       gameOver = true;
-    } else if (gameBoard[6] == gameBoard[7] == gameBoard[8]) {
-      gameOver = true;
-    }
-
-    if (gameBoard[0] == gameBoard[3] == gameBoard[6]) {
-      gameOver = true;
-    } else if (gameBoard[1] == gameBoard[4] == gameBoard[7]) {
-      gameOver = true;
-    } else if (gameBoard[2] == gameBoard[5] == gameBoard[8]) {
+    } else if (gameBoard[6] == gameBoard[7] && gameBoard[7] == gameBoard[8] && gameBoard[8] !== null) {
       gameOver = true;
     }
 
-    if (gameBoard[0] == gameBoard[4] == gameBoard[8]) {
+    if (gameBoard[0] == gameBoard[3] && gameBoard[3] == gameBoard[6] && gameBoard[6] !== null) {
       gameOver = true;
-    } else if (gameBoard[2] == gameBoard[4] == gameBoard[6]) {
+    } else if (gameBoard[1] == gameBoard[4] && gameBoard[4] == gameBoard[7] && gameBoard[7] !== null) {
+      gameOver = true;
+    } else if (gameBoard[2] == gameBoard[5] && gameBoard[5] == gameBoard[8] && gameBoard[8] !== null) {
+      gameOver = true;
+    }
+
+    if (gameBoard[0] == gameBoard[4] && gameBoard[4] == gameBoard[8] && gameBoard[8] !== null) {
+      gameOver = true;
+    } else if (gameBoard[2] == gameBoard[4] && gameBoard[4] == gameBoard[6] && gameBoard[6] !== null) {
       gameOver = true;
     }
 
@@ -130,7 +135,7 @@ const displayController = (function() {
   }
 
   return {
-    gameOver: gameOver()
+    gameOver
   }
 })()
 
