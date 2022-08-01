@@ -1,11 +1,133 @@
 body { 
   background-color : rgba(0, 0, 0, 0.95);
-  color            : black;
+  color            : white;
 }
+/* The Header: */
+.gameHeader {
+
+}
+
+.gameHeader h1 {
+  text-align: center;
+}
+
+/* The Opening Page */
+.openingPage {
+  position: absolute;
+  /* Center it */
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  height: 60vh;
+  width: 70vw;
+  background-color: darkolivegreen;
+
+  /* display: grid; */
+
+}
+
+.openingPage .openingHeader {
+  margin: 2rem;
+  border: 1px solid black;
+}
+
+.openingPage .openingHeader h1 {
+  text-align: center;
+}
+
+.options  {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+  /* border: 4px solid brown; */
+  height: 40%;
+}
+.options div {
+  display: flex;
+  justify-content: center;
+  height: 60%;
+  /* border: 3px solid blue; */
+}
+
+.options div button {
+  height: 90%;
+  width: 90%;
+}
+
+/* CREATE THE SINGLE PLAYER FORM PAGE STYING */
+.openingPage .singleDiv {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  /* border: 2px solid orange; */
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.openingPage .singleDiv label {
+  color: #d1c4e9;
+  font-size : clamp(0.8rem, 4.3vw, 2rem);
+
+}
+
+.openingPage .singleDiv input {
+  width: clamp(5rem, 40vw, 20rem);;
+}
+
+.openingPage button {
+  background-color: rgb(255, 166, 0);
+  /* background-color: #d1c4e9; */
+}
+
+.openingPage button:hover {
+  background-color: rgb(255, 247, 0);
+  cursor: pointer;
+}
+
+.openingPage  button {
+  height: 4rem;
+  width: 10rem;
+  border-radius: 0.5rem;
+}
+
+/* CREATE THE MULTI-PLAYER FORM PAGE STYING */
+.openingPage .multiDiv {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  /* border: 2px solid orange; */
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.openingPage .multiDiv div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.openingPage .multiDiv label {
+  /* border: 4px solid black */
+}
+.openingPage .multiDiv input {
+  /* border: 4px solid black */
+}
+.openingPage .multiDiv button {
+  /* border: 4px solid black */
+}
+
+
+/* Desing the game class */
+.game {
+  display: none;
+}
+
 
 /* Create the gameboard */
 .gameBoard {
-  display         : grid;
+  color           : black ;
+  display         : none;
   border          : 2px solid red;
   grid-template   : repeat(3,6rem) / repeat(3,6rem);
   justify-content : center;
@@ -24,3 +146,53 @@ body {
   height: 6rem;
   width: 6rem;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+  const {player1,player2} = _getPlayer()
+  const _updateGameBoard = (event) => {
+    let myIndex = event.target.getAttribute("data-index");
+    let currentPlayer = _currentPlayer(player1,player2);
+    currentPlayer.addMark(myIndex)    
+    console.log(currentPlayer);
+    _render();
+  };
+  signBox.forEach(box => box.addEventListener('click', _updateGameBoard))
+*/
+
+
+/* old version:
+  const _updateGameBoard = () => {
+    const {player1,player2} = _getPlayer()
+    signBox.forEach(box => box.addEventListener('click', (event) => {
+      let myIndex = event.target.getAttribute("data-index");
+      let currentPlayer = _currentPlayer(player1,player2);
+      currentPlayer.addMark(myIndex)    
+      console.log(currentPlayer);
+      _render();
+    }))
+  }
+
+  _updateGameBoard();
+*/
