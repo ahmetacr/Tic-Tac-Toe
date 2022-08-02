@@ -32,12 +32,11 @@ const Player = (name,sign,playTurn) => {
   }
 }
 
-// Create the GameBoard Module
+// GAMEBOARD MODULE
 const Gameboard = (function() {
   'use strict'
   const gameBoard = [null,null,null,null,null,null,null,null,null];
   const signBox   = document.querySelectorAll('.signBox');
-  const winnerPara = document.querySelector('.replay .winner');
   
   const _render    = () => {
     let i = 0
@@ -47,7 +46,9 @@ const Gameboard = (function() {
     })
   }
 
+  // Will work on that:
   const _getPlayer = () => {
+
     let name1 = 'ahmed'
     let sign1 = 'X';
     let name2 = 'mehmed';
@@ -77,9 +78,10 @@ const Gameboard = (function() {
   }
   
   // Magic Happens Below!
-  const {player1,player2} = _getPlayer()
-  const _updateGameBoard = (event) => {
+  
+  const _updateGameBoard = (event,player1,player2) => {
     // We set data-index attribute to find the clicked box and add it to gameBoard
+    console.log('event: ',event)
     const myIndex = event.target.getAttribute("data-index");
     let currentPlayer = _currentPlayer(player1,player2);
     currentPlayer.addMark(myIndex)    
@@ -92,38 +94,49 @@ const Gameboard = (function() {
     // Change the Current Player's color 
     displayController.changePlayerColor(currentPlayer);
 
-    // Try gameover // Continue from here
+    // GAMEOVER 
     let isGameOver = displayController.gameOver();
-    if (isGameOver.gameOver) {
+    if (isGameOver.gameOver && !isGameOver.isTie) {
       signBox.forEach(box => box.removeEventListener('click',_updateGameBoard))
-      announceWinner(currentPlayer); // fill it
+      announceWinner(currentPlayer.playerName); 
+    } else if (isGameOver.gameOver && isGameOver.isTie) {
+      signBox.forEach(box => box.removeEventListener('click',_updateGameBoard))
+      announceWinner('THERE IS NO WINNER AT THIS TIME!'); 
     }
     console.log(isGameOver); 
   };
 
-
   const announceWinner = (currentPlayer) => {
-    winnerPara.textContent = `WINNER IS: ${currentPlayer.playerName}`
+    const winnerPara = document.querySelector('.replay .winner');
+    winnerPara.textContent = `WINNER: ${currentPlayer}`
   }
 
-  signBox.forEach(box => box.addEventListener('click', _updateGameBoard))
+  const gameController = (name1,name2) => {
+    const {player1,player2} = _getPlayer()
+    player1.playerName = name1;
+    player2.playerName = name2;
+    signBox.forEach(box => box.addEventListener('click', (event) => _updateGameBoard(event,player1,player2)))
+  }
+
+  // gameController();
 
   return {
-    gameBoard: gameBoard
+    gameBoard: gameBoard,
+    gameController: gameController
   }
 })();
 
-// This is another Module for deciding a gameover.
+// DISPLAY CONTROLLER MODULE!.
 const displayController = (function() {
   'use strict'
   const openingPage = document.querySelector('.openingPage');
   const gameDiv     = document.querySelector('.game');
-  const player1Name = document.querySelector('#player1')
-  const player2Name = document.querySelector('#player2')
+  const player1P = document.querySelector('#player1')
+  const player2P = document.querySelector('#player2')
+  let player1Name;
+  let player2Name;
 
-  player1Name.style.color = 'green';
-
-
+  player1P.style.color = 'green';
 
   const gameOver = () => {
     const gameBoard = Gameboard.gameBoard;
@@ -198,10 +211,34 @@ const displayController = (function() {
       type == 'single' ? startBTN = _singlePlayer().startBTN: startBTN = _multiPlayer().startBTN;
 
       // start the game:
+      console.log(startBTN);
       _startGame(startBTN);
     }))
-    
+    return startBTN
+  }
 
+  const _getPlayerName = (input1,input2='computer') => {
+    if (input2 !== 'computer') {
+      input2.addEventListener('change', (event) => {
+        player2Name = event.target.value;
+        console.log('player2 Name: ',event.target.value); 
+        player2P.textContent = player2Name;
+      })
+    }
+
+    input1.addEventListener('change', (event) => {
+      player1Name = event.target.value;
+      player2Name = 'Computer'
+      console.log('player1 Name: ',event.target.value); 
+
+      // set player name on display
+      player1P.textContent = player1Name;
+      player2P.textContent = player2Name;
+    })    
+    return {
+      player1Name: player1Name,
+      player2Name: player2Name
+    }
   }
   
   const _singlePlayer = () => {
@@ -234,8 +271,12 @@ const displayController = (function() {
     // openingPage.style.color = '#d1c4e9';
     openingPage.appendChild(singleDiv);
 
+    _getPlayerName(singleInput);
+    // player1Name = _getPlayerName(singleInput).player1Name
+    // player2Name = _getPlayerName(singleInput).player2Name;
+
     return {
-      startBTN: startBTN
+      startBTN: startBTN,
     }
   }
 
@@ -292,6 +333,7 @@ const displayController = (function() {
 
     openingPage.style.backgroundColor = 'rgb(53, 1, 53)';
 
+    _getPlayerName(player1Input,player2Input)
     return {
       startBTN: startBTN
     }
@@ -301,19 +343,25 @@ const displayController = (function() {
     startBtn.addEventListener('click', (event) => {
       openingPage.style.display = 'none';
       gameDiv.style.display = 'flex';      
+      console.log('player1Name: ',player1Name)
+      console.log('player2Name: ',player2Name)
+      Gameboard.gameController(player1Name,player2Name);
     })
+
   }
 
   const changePlayerColor = (player) => {
     if (player.playerSign == 'X') {
-      player2Name.style.color = 'green';
-      player1Name.style.color = '#d1c4e9'
+      player2P.style.color = 'green';
+      player1P.style.color = '#d1c4e9'
     } else if (player.playerSign == 'O') {
-      player1Name.style.color = 'green';
-      player2Name.style.color = '#d1c4e9'
+      player1P.style.color = 'green';
+      player2P.style.color = '#d1c4e9'
     }
   }
+
   _goInputSection();
+  
   return {
     gameOver,
     changePlayerColor
