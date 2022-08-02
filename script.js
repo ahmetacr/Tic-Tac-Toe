@@ -37,6 +37,7 @@ const Gameboard = (function() {
   'use strict'
   const gameBoard = [null,null,null,null,null,null,null,null,null];
   const signBox   = document.querySelectorAll('.signBox');
+  const winnerPara = document.querySelector('.replay .winner');
   
   const _render    = () => {
     let i = 0
@@ -88,13 +89,22 @@ const Gameboard = (function() {
     // This will disable the box from being clicked again
     event.target.removeEventListener('click', _updateGameBoard)
 
+    // Change the Current Player's color 
+    displayController.changePlayerColor(currentPlayer);
+
     // Try gameover // Continue from here
     let isGameOver = displayController.gameOver();
     if (isGameOver.gameOver) {
       signBox.forEach(box => box.removeEventListener('click',_updateGameBoard))
+      announceWinner(currentPlayer); // fill it
     }
     console.log(isGameOver); 
   };
+
+
+  const announceWinner = (currentPlayer) => {
+    winnerPara.textContent = `WINNER IS: ${currentPlayer.playerName}`
+  }
 
   signBox.forEach(box => box.addEventListener('click', _updateGameBoard))
 
@@ -107,6 +117,12 @@ const Gameboard = (function() {
 const displayController = (function() {
   'use strict'
   const openingPage = document.querySelector('.openingPage');
+  const gameDiv     = document.querySelector('.game');
+  const player1Name = document.querySelector('#player1')
+  const player2Name = document.querySelector('#player2')
+
+  player1Name.style.color = 'green';
+
 
 
   const gameOver = () => {
@@ -147,7 +163,10 @@ const displayController = (function() {
       gameOver = true;
     }
 
-    if (gameOver) {console.log('GAME OVER!')};
+    if (gameOver) {
+      console.log('GAME OVER!')
+    
+    };
     return {
       gameOver,
       isTie
@@ -168,15 +187,21 @@ const displayController = (function() {
   
   const _goInputSection = () => {
     const options = document.querySelectorAll('.options div button');
+    let startBTN;
     options.forEach(option => option.addEventListener('click', (event) => {
-      let type = _playerType(event)
       // Clean the opening page so that the users enter information about 
       const openingItems = openingPage.children;
       openingPage.removeChild(openingItems[1])
-      // openingPage.removeChild(openingItems[0])
-      console.log('type:', type);  
-      type == 'single' ? _singlePlayer(): _multiPlayer()
+      
+      // Go to the next section based on type:
+      let type = _playerType(event)
+      type == 'single' ? startBTN = _singlePlayer().startBTN: startBTN = _multiPlayer().startBTN;
+
+      // start the game:
+      _startGame(startBTN);
     }))
+    
+
   }
   
   const _singlePlayer = () => {
@@ -198,7 +223,7 @@ const displayController = (function() {
     singleInput.id = 'single';
 
     const startBTN = document.createElement('button');
-    startBTN.classList.add('singleStartBtn');
+    startBTN.classList.add('startBtn');
     startBTN.textContent = 'START'
 
     singleDiv.appendChild(singleLabel);
@@ -208,6 +233,10 @@ const displayController = (function() {
     openingPage.style.backgroundColor = 'rgb(53, 1, 53)';
     // openingPage.style.color = '#d1c4e9';
     openingPage.appendChild(singleDiv);
+
+    return {
+      startBTN: startBTN
+    }
   }
 
   const _multiPlayer = () => {
@@ -246,7 +275,7 @@ const displayController = (function() {
     player2Input.id = 'player2Input';
 
     const startBTN = document.createElement('button');
-    startBTN.classList.add('multiStartBtn');
+    startBTN.classList.add('startBtn');
     startBTN.textContent = 'START'
 
     player1Div.appendChild(player1Label);
@@ -262,76 +291,34 @@ const displayController = (function() {
     openingPage.appendChild(multiDiv);
 
     openingPage.style.backgroundColor = 'rgb(53, 1, 53)';
+
+    return {
+      startBTN: startBTN
+    }
   }
 
-  const startGame   = () => {}
+  const _startGame   = startBtn => {
+    startBtn.addEventListener('click', (event) => {
+      openingPage.style.display = 'none';
+      gameDiv.style.display = 'flex';      
+    })
+  }
 
+  const changePlayerColor = (player) => {
+    if (player.playerSign == 'X') {
+      player2Name.style.color = 'green';
+      player1Name.style.color = '#d1c4e9'
+    } else if (player.playerSign == 'O') {
+      player1Name.style.color = 'green';
+      player2Name.style.color = '#d1c4e9'
+    }
+  }
   _goInputSection();
-
   return {
-    gameOver
+    gameOver,
+    changePlayerColor
   }
 
 })()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const Player1 = (name,level) => {
-//   let health = level * 2;
-//   const getLevel = () => level;
-//   const getName  = () => name;
-//   const die      = () => {
-//     // uh oh
-//   }
-//   const damage   = x => {
-//     health -= x;
-//     if (health <= 0) {
-//       die();
-//     }
-//   }
-//   const attack   = enemy => {
-//     if (level < enemy.getLevel()) {
-//       damage(1);
-//       console.log(`${enemy.getName()} has damaged ${name}`);
-//     }
-//     if (level >= enemy.getLevel()) {
-//       enemy.damage(1);
-//       console.log(`${name} has damaged ${enemy.getName()}`);
-//     }
-//   }
-//   return {
-//     attack,
-//     damage,
-//     getLevel,
-//     getName
-//   }
-// }
-
-// const jimmie = Player('jim',10);
-// const badGuy = Player('jeff',5);
-
-// jimmie.attack(badGuy);
