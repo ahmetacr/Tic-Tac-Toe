@@ -9,36 +9,75 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  <h1>Tic Tac Toe</h1>
 
-  <div class="gameBoard">
-    <div class="box">
-      <p class="signBox" data-index=0></p>
+
+  <div class="openingPage">
+    <div class="openingHeader">
+      <h1>WELCOME TO THE TIC-TAC-TOE GAME</h1>
     </div>
-    <div class="box">
-      <p class="signBox" data-index=1></p>
+
+    <div class="options">
+      <div class="singlePlayer">
+        <button id = 'singlePlayer'>Single-Player</button>
+      </div>
+      <div class="multiPlayer">
+        <button id = 'multiPlayer'>Multi-Player</button>
+      </div>
     </div>
-    <div class="box">
-      <p class="signBox" data-index=2></p>
+
+  </div>
+
+  <div class="game">
+    <div class="gameHeader">
+      <h1>Tic Tac Toe</h1>
     </div>
-    <div class="box">
-      <p class="signBox" data-index=3></p>
+  
+    <div class="gameBoard">
+      <div class="box">
+        <p class="signBox" data-index=0></p>
+      </div>
+      <div class="box">
+        <p class="signBox" data-index=1></p>
+      </div>
+      <div class="box">
+        <p class="signBox" data-index=2></p>
+      </div>
+      <div class="box">
+        <p class="signBox" data-index=3></p>
+      </div>
+      <div class="box">
+        <p class="signBox" data-index=4></p>
+      </div>
+      <div class="box">
+        <p class="signBox" data-index=5></p>
+      </div>
+      <div class="box">
+        <p class="signBox" data-index=6></p>
+      </div>
+      <div class="box">
+        <p class="signBox" data-index=7></p>
+      </div>
+      <div class="box">
+        <p class="signBox" data-index=8></p>
+      </div>
     </div>
-    <div class="box">
-      <p class="signBox" data-index=4></p>
+
+
+    <div class="players">
+      <p id="player1">PLAYER1</p>
+      <p id="player2">PLAYER2</p>
     </div>
-    <div class="box">
-      <p class="signBox" data-index=5></p>
+
+    <div class="replay">
+      <p class="winner"></p>
+      <button id = 'replayBtn'>REPLAY</button>
     </div>
-    <div class="box">
-      <p class="signBox" data-index=6></p>
-    </div>
-    <div class="box">
-      <p class="signBox" data-index=7></p>
-    </div>
-    <div class="box">
-      <p class="signBox" data-index=8></p>
-    </div>
+  </div>
+
+
+
+  <div class="footer">
+    <!-- <p>By github@ahmetacr</p> -->
   </div>
 </body>
 </html>
