@@ -2,15 +2,9 @@ body {
   background-color : rgba(0, 0, 0, 0.95);
   color            : white;
 }
-/* The Header: */
-.gameHeader {
 
-}
 
-.gameHeader h1 {
-  text-align: center;
-}
-
+/* -------------------------------------------------------------------------------- */
 /* The Opening Page */
 .openingPage {
   position: absolute;
@@ -76,7 +70,6 @@ body {
 
 .openingPage button {
   background-color: rgb(255, 166, 0);
-  /* background-color: #d1c4e9; */
 }
 
 .openingPage button:hover {
@@ -118,81 +111,96 @@ body {
 }
 
 
+/* -------------------------------------------------------------------------------- */
+
+
+
 /* Desing the game class */
 .game {
+  border-bottom: 5px solid rgb(0, 132, 255);
   display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 3vh;
+}
+
+/* The Header: */
+.gameHeader {
+  /* border: 2px solid purple; */
+  background-color: rgba(0, 0, 0, 0.783);
+  width: 100%;
+}
+
+.gameHeader h1 {
+  text-align: center;
+  font-size: 3rem;
+}
+
+/* Player's Paragraph */
+.game .players {
+  display: flex;
+  gap: 10vw;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-weight: 600;
+}
+
+
+
+/* Replay Button */
+.game .replay {
+  /* border: 3px solid green; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game .replay button {
+  height: 4rem;
+  width: 10rem;
+  border-radius: 0.5rem;
+  background-color: rgb(255, 166, 0);
+  font-weight: 600;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.3rem;
+  margin-bottom: 4rem;
+}
+
+.game .replay button:hover {
+  background-color: rgb(255, 247, 0);
+  cursor: pointer;
 }
 
 
 /* Create the gameboard */
 .gameBoard {
+  margin          : 2rem auto 0 auto;
   color           : black ;
-  display         : none;
-  border          : 2px solid red;
+  display         : grid;
+  border-left     : 5px solid grey;
+  border-top      : 5px solid grey;
+  /* box-shadow   : -10px -5px 10px rgba(126, 126, 112, 0.645); */
+  border-radius   : 5px;
   grid-template   : repeat(3,6rem) / repeat(3,6rem);
-  justify-content : center;
+  width           : fit-content;
 }
 
 .gameBoard div{
-  height     : 6rem;
-  width      : 6rem;
-  background : beige;
-  border     : 1px solid grey ;
+  display         : flex;
+  justify-content : center;
+  align-items     : center;
+  height          : 6rem;
+  width           : 6rem;
+  background      : beige;
+  border          : 1px solid grey ;
+  font-size       : 3rem;
+  font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .gameBoard div p {
-  margin: 0;
-  padding: 0;
-  height: 6rem;
-  width: 6rem;
+  height     : 5rem;
+  width      : 5rem;
+  text-align : center;
 }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-  const {player1,player2} = _getPlayer()
-  const _updateGameBoard = (event) => {
-    let myIndex = event.target.getAttribute("data-index");
-    let currentPlayer = _currentPlayer(player1,player2);
-    currentPlayer.addMark(myIndex)    
-    console.log(currentPlayer);
-    _render();
-  };
-  signBox.forEach(box => box.addEventListener('click', _updateGameBoard))
-*/
-
-
-/* old version:
-  const _updateGameBoard = () => {
-    const {player1,player2} = _getPlayer()
-    signBox.forEach(box => box.addEventListener('click', (event) => {
-      let myIndex = event.target.getAttribute("data-index");
-      let currentPlayer = _currentPlayer(player1,player2);
-      currentPlayer.addMark(myIndex)    
-      console.log(currentPlayer);
-      _render();
-    }))
-  }
-
-  _updateGameBoard();
-*/
