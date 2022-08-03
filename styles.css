@@ -155,6 +155,7 @@ body {
 }
 
 .game .replay button {
+  display: none;
   height: 4rem;
   width: 10rem;
   border-radius: 0.5rem;

@@ -35,10 +35,12 @@ const Player = (name,sign,playTurn) => {
 // GAMEBOARD MODULE
 const Gameboard = (function() {
   'use strict'
-  const gameBoard = [null,null,null,null,null,null,null,null,null];
+  // Create the gameboard array:
+  let gameBoard = [null,null,null,null,null,null,null,null,null];
   const signBox   = document.querySelectorAll('.signBox');
   
-  const _render    = () => {
+  // Push the array into the window
+  const _render    = (gameBoard) => {
     let i = 0
     signBox.forEach(box => {
       box.textContent = gameBoard[i]
@@ -46,13 +48,10 @@ const Gameboard = (function() {
     })
   }
 
-  // Will work on that:
-  const _getPlayer = () => {
-
-    let name1 = 'ahmed'
+  // Get the information and create the Player element
+  const _getPlayer = (name1,name2) => {
     let sign1 = 'X';
-    let name2 = 'mehmed';
-    let sign2 = 'O'
+    let sign2 = 'O';
 
     const player1  = Player(name1,sign1,true);
     const player2  = Player(name2,sign2,false);
@@ -76,50 +75,63 @@ const Gameboard = (function() {
     }
     return currentPlayer;
   }
+
+  const _gameOverRepeat = (currentPlayer,gameBoard,isGameOver,replay) => {
+    currentPlayer = '';
+    gameBoard = [null,null,null,null,null,null,null,null,null];
+    isGameOver.gameOver = false;
+    isGameOver.isTie    = false;
+    replay;
+  }
   
   // Magic Happens Below!
-  
   const _updateGameBoard = (event,player1,player2) => {
-    // We set data-index attribute to find the clicked box and add it to gameBoard
-    console.log('event: ',event)
-    const myIndex = event.target.getAttribute("data-index");
-    let currentPlayer = _currentPlayer(player1,player2);
-    currentPlayer.addMark(myIndex)    
-    console.log(currentPlayer);
-    _render();
-
-    // This will disable the box from being clicked again
-    event.target.removeEventListener('click', _updateGameBoard)
-
-    // Change the Current Player's color 
-    displayController.changePlayerColor(currentPlayer);
-
-    // GAMEOVER 
-    let isGameOver = displayController.gameOver();
-    if (isGameOver.gameOver && !isGameOver.isTie) {
-      signBox.forEach(box => box.removeEventListener('click',_updateGameBoard))
-      announceWinner(currentPlayer.playerName); 
-    } else if (isGameOver.gameOver && isGameOver.isTie) {
-      signBox.forEach(box => box.removeEventListener('click',_updateGameBoard))
-      announceWinner('THERE IS NO WINNER AT THIS TIME!'); 
+    if (event.target.textContent == '') {
+      // We set data-index attribute to find the clicked box and add it to gameBoard
+      const myIndex = event.target.getAttribute("data-index");
+  
+      // Get the current player and render()
+      let currentPlayer = _currentPlayer(player1,player2);
+      currentPlayer.addMark(myIndex)    
+      _render(Gameboard.gameBoard);
+  
+      // Change the Current Player's color 
+      displayController.changePlayerColor(currentPlayer);
+    
+      // Decide if the game is over 
+      let isGameOver = displayController.gameOver();
+      if (isGameOver.gameOver && !isGameOver.isTie) {
+        _announceWinner(currentPlayer.playerName); 
+        _gameOverRepeat(currentPlayer,gameBoard,isGameOver,displayController.Replay());
+      } else if (isGameOver.gameOver && isGameOver.isTie) {
+        _announceWinner('THERE IS NO WINNER AT THIS TIME!'); 
+        _gameOverRepeat(currentPlayer,gameBoard,isGameOver,displayController.Replay());
+      }
+      return {
+        isGameOver
+      } 
     }
-    console.log(isGameOver); 
   };
 
-  const announceWinner = (currentPlayer) => {
+  const _announceWinner = (currentPlayer) => {
     const winnerPara = document.querySelector('.replay .winner');
-    winnerPara.textContent = `WINNER: ${currentPlayer}`
+    winnerPara.textContent = `WINNER: ${currentPlayer.toUpperCase()}`
   }
 
+  // Get the player objects and names and give it in
   const gameController = (name1,name2) => {
-    const {player1,player2} = _getPlayer()
-    player1.playerName = name1;
-    player2.playerName = name2;
-    signBox.forEach(box => box.addEventListener('click', (event) => _updateGameBoard(event,player1,player2)))
+    const {player1,player2} = _getPlayer(name1,name2)
+    function _start(event) {
+      _updateGameBoard(event,player1,player2)
+      if (displayController.gameOver().gameOver) {
+        signBox.forEach(box => box.removeEventListener('click', _start))
+      }
+    }
+    signBox.forEach(box => box.addEventListener('click', _start),{once:true}); // This will disable each box after one click
   }
 
-  // gameController();
-
+  // Return the gameboard so that it's display can be updated
+  // Return the gameController so that it starts as long as the start button is pressed
   return {
     gameBoard: gameBoard,
     gameController: gameController
@@ -138,10 +150,9 @@ const displayController = (function() {
 
   player1P.style.color = 'green';
 
+  // Set how to decide on whether the game is over
   const gameOver = () => {
     const gameBoard = Gameboard.gameBoard;
-    console.log(gameBoard);
-    console.log(gameBoard[0])
     let gameOver = false;
     let isTie    = false;
     // Check for the horizontal equation: 
@@ -152,7 +163,6 @@ const displayController = (function() {
     } else if (gameBoard[6] == gameBoard[7] && gameBoard[7] == gameBoard[8] && gameBoard[8] !== null) {
       gameOver = true;
     }
-
     // Check for the vertical equation
     if (gameBoard[0] == gameBoard[3] && gameBoard[3] == gameBoard[6] && gameBoard[6] !== null) {
       gameOver = true;
@@ -161,46 +171,43 @@ const displayController = (function() {
     } else if (gameBoard[2] == gameBoard[5] && gameBoard[5] == gameBoard[8] && gameBoard[8] !== null) {
       gameOver = true;
     }
-
     // Check for the cross equation
     if (gameBoard[0] == gameBoard[4] && gameBoard[4] == gameBoard[8] && gameBoard[8] !== null) {
       gameOver = true;
     } else if (gameBoard[2] == gameBoard[4] && gameBoard[4] == gameBoard[6] && gameBoard[6] !== null) {
       gameOver = true;
     }
-
     // Check for the tie
-    if (!gameBoard.includes(null)) {
+    if (!gameBoard.includes(null) && !gameOver) {
       console.log("It's a TIE!");
       isTie    = true;
       gameOver = true;
     }
-
-    if (gameOver) {
-      console.log('GAME OVER!')
-    
-    };
     return {
       gameOver,
       isTie
     }
   }
 
+  // Take the Player type from UI
   const _playerType = (event) => {
-    // We got 2 options: Single player or Multi-Player
     let playerType;
     if (event.target.id == 'singlePlayer') {
       playerType = 'single';
     } else {
       playerType = 'multi';
     }
-    console.log(playerType);
     return playerType;
   }
   
-  const _goInputSection = () => {
+  // Pass the intro sections, create the start button and open the game!
+  const _passIntro = () => {
+    // Get the option buttons which initially pop up!
     const options = document.querySelectorAll('.options div button');
+
+    // Create the Start Button variable and define it later based on the event
     let startBTN;
+    
     options.forEach(option => option.addEventListener('click', (event) => {
       // Clean the opening page so that the users enter information about 
       const openingItems = openingPage.children;
@@ -211,17 +218,15 @@ const displayController = (function() {
       type == 'single' ? startBTN = _singlePlayer().startBTN: startBTN = _multiPlayer().startBTN;
 
       // start the game:
-      console.log(startBTN);
       _startGame(startBTN);
     }))
-    return startBTN
   }
 
-  const _getPlayerName = (input1,input2='computer') => {
+  // Get the input and set it to the display
+  const _displayPlayerName = (input1,input2='computer') => {
     if (input2 !== 'computer') {
       input2.addEventListener('change', (event) => {
         player2Name = event.target.value;
-        console.log('player2 Name: ',event.target.value); 
         player2P.textContent = player2Name;
       })
     }
@@ -229,8 +234,6 @@ const displayController = (function() {
     input1.addEventListener('change', (event) => {
       player1Name = event.target.value;
       player2Name = 'Computer'
-      console.log('player1 Name: ',event.target.value); 
-
       // set player name on display
       player1P.textContent = player1Name;
       player2P.textContent = player2Name;
@@ -241,6 +244,7 @@ const displayController = (function() {
     }
   }
   
+  // If single player
   const _singlePlayer = () => {
     const header = document.querySelector('.openingHeader h1');
     header.textContent = 'You will be playing against AI!'
@@ -268,18 +272,15 @@ const displayController = (function() {
     singleDiv.appendChild(startBTN);
 
     openingPage.style.backgroundColor = 'rgb(53, 1, 53)';
-    // openingPage.style.color = '#d1c4e9';
     openingPage.appendChild(singleDiv);
 
-    _getPlayerName(singleInput);
-    // player1Name = _getPlayerName(singleInput).player1Name
-    // player2Name = _getPlayerName(singleInput).player2Name;
+    _displayPlayerName(singleInput);
 
     return {
       startBTN: startBTN,
     }
   }
-
+  // If multi-player
   const _multiPlayer = () => {
     const header = document.querySelector('.openingHeader h1');
     header.textContent = 'MULTI PLAYER MODE!'
@@ -333,23 +334,23 @@ const displayController = (function() {
 
     openingPage.style.backgroundColor = 'rgb(53, 1, 53)';
 
-    _getPlayerName(player1Input,player2Input)
+    _displayPlayerName(player1Input,player2Input)
     return {
       startBTN: startBTN
     }
   }
 
+  // Set the display if the start button is clicked!
   const _startGame   = startBtn => {
-    startBtn.addEventListener('click', (event) => {
+    startBtn.addEventListener('click', () => {
       openingPage.style.display = 'none';
       gameDiv.style.display = 'flex';      
-      console.log('player1Name: ',player1Name)
-      console.log('player2Name: ',player2Name)
       Gameboard.gameController(player1Name,player2Name);
     })
 
   }
 
+  // Display the current player's color as green
   const changePlayerColor = (player) => {
     if (player.playerSign == 'X') {
       player2P.style.color = 'green';
@@ -360,11 +361,28 @@ const displayController = (function() {
     }
   }
 
-  _goInputSection();
+  // Get and set the Replay button
+  const Replay = () => {
+    const replayBtn = document.getElementById('replayBtn');
+    replayBtn.style.display = 'block';
+    console.log(replayBtn.style.display);
+    console.log('AAAAAAAAAAAA');
+    replayBtn.addEventListener('click', function replay(){
+      document.querySelector('.winner').textContent =  '';
+      document.querySelectorAll('.signBox').forEach(box => box.textContent = '');
+
+      Gameboard.gameBoard = [null,null,null,null,null,null,null,null,null]
+      replayBtn.style.display = 'none';
+      Gameboard.gameController(player1Name,player2Name);  
+    },{capture:true})
+  }
+
+  _passIntro();
   
   return {
     gameOver,
-    changePlayerColor
+    changePlayerColor,
+    Replay
   }
 
 })()
