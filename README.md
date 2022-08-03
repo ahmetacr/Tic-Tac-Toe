@@ -1,2 +1,5 @@
-The TIC-TAC-TOE Game is now on! Except some page configurations.
-Stay tuned! It will be updated soon...
+The TIC-TAC-TOE Game is now on! 
+Each and every function works. However, the AI version is not ready yet...
+Stay tuned!
+
+The live version: https://github.com/ahmetacr/Tic-Tac-Toe
