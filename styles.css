@@ -1,6 +1,15 @@
 body { 
   background-color : rgba(0, 0, 0, 0.95);
   color            : white;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --tooLightPurple: rgb(175, 2, 175);
+  --lightPurple: rgb(120, 0, 120);
+  --darkPurple: rgb(53, 1, 53);
+  --perfectWhite: hwb(0 82% 0%);
 }
 
 
@@ -8,21 +17,20 @@ body {
 /* The Opening Page */
 .openingPage {
   position: absolute;
+  font-family: 'Special Elite', cursive;
+  border-radius: 7px;
   /* Center it */
   left: 50%;
   top: 40%;
   transform: translate(-50%, -50%);
   height: 60vh;
   width: 70vw;
-  background-color: darkolivegreen;
-
-  /* display: grid; */
-
+  background-color: rgb(53, 67, 29);
 }
 
 .openingPage .openingHeader {
+  padding: 0.3rem;
   margin: 2rem;
-  border: 1px solid black;
 }
 
 .openingPage .openingHeader h1 {
@@ -70,23 +78,34 @@ body {
 }
 
 .openingPage button {
-  background-color: rgb(255, 166, 0);
+  background-color: var(--lightPurple);
+  color: #000000;
+  font-size : clamp(0.3rem, 7vw, 2rem);
+
+  transition: font-size 0.2s, padding 0.2s;
 }
 
-.openingPage button:hover {
-  background-color: rgb(255, 247, 0);
+.openingPage button:hover,
+.openingPage button:active {
+  background-color: var(--tooLightPurple);
+  color: var(--perfectWhite);
   cursor: pointer;
+
+  /* padding: 1.4rem; */
+  font-size: clamp(0.5rem, 9vw, 2.2rem);
 }
 
 .openingPage  button {
   height: 4rem;
   width: 10rem;
   border-radius: 0.5rem;
+
+  transition: ;
 }
 
 /* CREATE THE MULTI-PLAYER FORM PAGE STYING */
 .openingPage .multiDiv {
-  background-color: rgb(53, 1, 53);
+  background-color: var(--darkPurple);
   padding: 4rem;
   display: flex;
   flex-direction: column;
@@ -130,6 +149,7 @@ body {
   /* border: 2px solid purple; */
   background-color: rgba(0, 0, 0, 0.783);
   width: 100%;
+  font-family: 'Press Start 2P', cursive;
 }
 
 .gameHeader h1 {
@@ -177,31 +197,92 @@ body {
   margin          : 2rem auto 0 auto;
   color           : black ;
   display         : grid;
-  border-left     : 5px solid grey;
-  border-top      : 5px solid grey;
-  /* box-shadow   : -10px -5px 10px rgba(126, 126, 112, 0.645); */
+  border-left     : 10px solid rgba(80, 80, 80, 0.396);
+  border-top      : 10px solid rgba(80, 80, 80, 0.396);
+  gap             : .8rem;
   border-radius   : 5px;
   grid-template   : repeat(3,6rem) / repeat(3,6rem);
   width           : fit-content;
 }
 
 .gameBoard div{
+  border-radius   : 10px;
   display         : flex;
   justify-content : center;
   align-items     : center;
   height          : 6rem;
   width           : 6rem;
   background      : beige;
-  border          : 1px solid grey ;
-  font-size       : 3rem;
-  font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size       : 3.5rem;
+  /* font-family: 'Press Start 2P', cursive; */
+  font-family     : 'Permanent Marker', cursive;
 }
 
 .gameBoard div p {
   height     : 5rem;
   width      : 5rem;
   text-align : center;
+  transition : font-size 2s,background-color 2s,height 2s,width 2s;
+}
+
+.gameBoard div:hover {
+  background      : rgba(245, 245, 220, 0.717);
+}
+
+.gameBoard div p:active {
+  background-color: aqua;
+  height     : 7rem;
+  width      : 7rem;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background-color: black;
+  height: 2rem;
+}
+
+/* All buttons will have the same font-family */
+button {
+  font-family: 'Permanent Marker', cursive;
 }
 
 
+
+.animate  {
+  animation: 2s anim-popoutin ease 1;
+}
+
+@keyframes anim-popoutin {
+  0% {
+    color: black;
+    transform: scale(0);
+    opacity: 0;
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  25% {
+    color: red;
+    transform: scale(2);
+    opacity: 1;
+    text-shadow: 3px 10px 5px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    color: black;
+    transform: scale(1);
+    opacity: 1;
+    text-shadow: 1px 0 0 rgba(0, 0, 0, 0);
+  }
+  100% {
+    /* animate nothing to add pause at the end of animation */
+    transform: scale(1);
+    opacity: 1;
+    text-shadow: 1px 0 0 rgba(0, 0, 0, 0);
+  }
+}
 
