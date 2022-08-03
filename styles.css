@@ -49,6 +49,7 @@ body {
 
 /* CREATE THE SINGLE PLAYER FORM PAGE STYING */
 .openingPage .singleDiv {
+  background-color: rgb(53, 1, 53);
   padding: 3rem;
   display: flex;
   flex-direction: column;
@@ -85,10 +86,10 @@ body {
 
 /* CREATE THE MULTI-PLAYER FORM PAGE STYING */
 .openingPage .multiDiv {
-  padding: 3rem;
+  background-color: rgb(53, 1, 53);
+  padding: 4rem;
   display: flex;
   flex-direction: column;
-  /* border: 2px solid orange; */
   align-items: center;
   justify-content: center;
   gap: 1rem;
@@ -143,7 +144,6 @@ body {
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   font-weight: 600;
 }
-
 
 
 /* Replay Button */
