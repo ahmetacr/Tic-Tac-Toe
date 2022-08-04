@@ -35,6 +35,7 @@ body {
 
 .openingPage .openingHeader h1 {
   text-align: center;
+  font-size: clamp(.6rem,8vw,3rem);
 }
 
 .options  {
@@ -100,7 +101,6 @@ body {
   width: 10rem;
   border-radius: 0.5rem;
 
-  transition: ;
 }
 
 /* CREATE THE MULTI-PLAYER FORM PAGE STYING */
@@ -266,6 +266,48 @@ button {
     opacity: 0;
     text-shadow: 0 0 0 rgba(0, 0, 0, 0);
   }
+  25% {
+    color: rgb(0, 255, 234);
+    transform: scale(2);
+    opacity: 1;
+    text-shadow: 3px 10px 5px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    color: black;
+    transform: scale(1);
+    opacity: 1;
+    text-shadow: 1px 0 0 rgba(0, 0, 0, 0);
+  }
+  100% {
+    /* animate nothing to add pause at the end of animation */
+    transform: scale(1);
+    opacity: 1;
+    text-shadow: 1px 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+
+
+/* AI ANIMATION: */
+.animate-computer  {
+  animation: 4s anim-computer ease 1;
+}
+
+@keyframes anim-computer {
+  0% {
+    color: black;
+    transform: scale(0);
+    opacity: 0;
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+
+  10% {
+    color: black;
+    transform: scale(1);
+    opacity: 0;
+    text-shadow: 1px 0 0 rgba(0, 0, 0, 0.5);
+  }
+
   25% {
     color: red;
     transform: scale(2);
