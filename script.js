@@ -66,6 +66,7 @@
     // Repetitive tasks on gameover situation
     const _gameOverRepeat = (currentPlayer,gameBoard,isGameOver,replay) => {
       signBox.forEach(box => box.classList.remove('animate'));
+      signBox.forEach(box => box.classList.remove('animate-computer'));
 
       gameBoard = [null,null,null,null,null,null,null,null,null];
       isGameOver.gameOver = false;
@@ -82,11 +83,25 @@
         const myIndex = event.target.getAttribute("data-index");
 
     
-        // Get the current player and render()
         let currentPlayer = _currentPlayer(player1,player2);
-        currentPlayer.addMark(myIndex)    
-        _render(Gameboard.gameBoard);
-    
+        
+        if (player2.playerName == 'Computer') {
+          currentPlayer = player1;
+        }
+
+        currentPlayer.addMark(myIndex);
+        _render(Gameboard.gameBoard); 
+        
+        // Decide whether it is the computer playing
+        if (player2.playerName == 'Computer') {
+          let randomIndex = AI.randomIndex(Gameboard.gameBoard).index;
+          if (randomIndex != null){
+            document.querySelector(`[data-index="${randomIndex}"]`).classList.toggle('animate-computer');
+            player2.addMark(randomIndex);
+            _render(Gameboard.gameBoard); 
+          }
+        }
+
         event.target.classList.toggle('animate');
 
         // Change the Current Player's color 
@@ -95,6 +110,9 @@
         // Decide if the game is over 
         let isGameOver = displayController.gameOver();
         if (isGameOver.gameOver && !isGameOver.isTie) {
+          if (player2.playerName == 'Computer') {
+            player2.playerName = 'Loser';
+          }
           _announceWinner(currentPlayer.playerName); 
           _gameOverRepeat(currentPlayer,gameBoard,isGameOver,displayController.Replay());
         } else if (isGameOver.gameOver && isGameOver.isTie) {
@@ -380,14 +398,28 @@
       changePlayerColor,
       Replay
     }
-  })()
+  })();
 
 
   // The MINIMAX AI Module
   const AI = (function() {
     'use strict'
 
+    const randomIndex = (gameBoard) => {
+      let availableIndex =[];
+      for (let i in gameBoard) {
+        if (gameBoard[i] == null) {
+          availableIndex.push(i); // returns all the available indexes
+        }
+      }  
+      let index = availableIndex[Math.floor(Math.random()*availableIndex.length)]; // Creates a random index
+      return {
+        index: index
+      }
+    }
+    return {
+      randomIndex: randomIndex
+    }
+  })();
 
-
-  })
 })();
